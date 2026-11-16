@@ -9,6 +9,9 @@ import { RehearseSection } from "@/components/home/rehearse-section";
 import { JazzClubClose } from "@/components/home/distribution/jazzclub-section";
 import { CustomerProof } from "@/components/home/customer-proof";
 import { DataResponsibilitySection } from "@/components/home/data-responsibility-section";
+import { BasicsBanner } from "@/components/basics/basics-banner";
+import { BasicsShell } from "@/components/basics/basics-shell";
+import { BASICS_EARLY_SCRIPT } from "@/lib/basics-early-script";
 import { pageSeo } from "@/lib/seo";
 import { IS_FIGMA_EXPORT } from "@/lib/figma-export";
 import "@/components/home/distribution/homepage.css";
@@ -22,15 +25,21 @@ export const metadata: Metadata = pageSeo({
 export default function HomePage() {
   return <GridBackground>
     <Header />
-    <main className={`dh-home flex-1${IS_FIGMA_EXPORT ? " dh-figma-export" : ""}`}>
-      <DistributionHero />
-      <TrustedByStrip />
-      <MarketplaceTabs />
-      <RehearseSection />
-      <DataResponsibilitySection />
-      <CustomerProof />
-      <JazzClubClose />
-    </main>
+    {/* Before first paint on /#basics: hide the server-rendered Home view. */}
+    <script dangerouslySetInnerHTML={{ __html: BASICS_EARLY_SCRIPT }} />
+    {/* Home view and the in-place Basics view (/#basics) share this shell. */}
+    <BasicsShell home={
+      <main className={`dh-home flex-1${IS_FIGMA_EXPORT ? " dh-figma-export" : ""}`}>
+        <DistributionHero />
+        <TrustedByStrip />
+        <MarketplaceTabs />
+        <BasicsBanner />
+        <RehearseSection />
+        <DataResponsibilitySection />
+        <CustomerProof />
+        <JazzClubClose />
+      </main>
+    } />
     <Footer />
   </GridBackground>;
 }
